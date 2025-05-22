@@ -1,0 +1,6 @@
+2025-05-22 20:08:31.643956-03:00 jdbc[13]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Syntax error in SQL statement "[*]NOME ENDERECO_ID"; SQL statement:
+NOME ENDERECO_ID [42000-232]
+2025-05-22 20:08:32.398256-03:00 jdbc[13]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Syntax error in SQL statement "[*]NOME ENDERECO_ID"; SQL statement:
+NOME ENDERECO_ID [42000-232]
