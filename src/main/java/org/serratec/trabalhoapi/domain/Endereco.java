@@ -1,21 +1,11 @@
 package org.serratec.trabalhoapi.domain;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.Embeddable;
 import jakarta.validation.constraints.NotBlank;
 
-// Torna uma entidade
-@Entity
+@Embeddable
 public class Endereco {
-	
-	// ID como chave primária
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-    
-    // Não aceita valores nulos
+
     @NotBlank(message = "Rua é obrigatória")
     private String rua;
 
@@ -27,24 +17,6 @@ public class Endereco {
 
     @NotBlank(message = "CEP é obrigatório")
     private String cep;
-
-    public Endereco() {}
-
-    public Endereco(Long id, String rua, String cidade, String estado, String cep) {
-        this.id = id;
-        this.rua = rua;
-        this.cidade = cidade;
-        this.estado = estado;
-        this.cep = cep;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
 
     public String getRua() {
         return rua;

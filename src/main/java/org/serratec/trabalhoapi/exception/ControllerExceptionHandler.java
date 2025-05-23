@@ -1,28 +1,41 @@
 package org.serratec.trabalhoapi.exception;
 
+import java.time.LocalDateTime;
 import java.util.stream.Collectors;
 
 import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.context.request.WebRequest;
+import org.springframework.http.HttpHeaders;
+import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
+
 
 @ControllerAdvice
-public class ControllerExceptionHandler {
+public class ControllerExceptionHandler extends ResponseEntityExceptionHandler {
 
-    @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<ErroResposta> handleValidacao(MethodArgumentNotValidException ex) {
-        String erros = ex.getBindingResult()
-                .getFieldErrors()
-                .stream()
-                .map(e -> e.getField() + ": " + e.getDefaultMessage())
-                .collect(Collectors.joining("; "));
-        return new ResponseEntity<>(new ErroResposta(erros), HttpStatus.BAD_REQUEST);
+    @Override
+    protected ResponseEntity<Object> handleMethodArgumentNotValid(
+            MethodArgumentNotValidException ex,
+            HttpHeaders headers,
+            HttpStatusCode status,
+            WebRequest request) {
+
+        String mensagem = ex.getBindingResult().getFieldErrors().stream()
+                .map(e -> e.getDefaultMessage())
+                .collect(Collectors.joining(", "));
+
+        ErroResposta erroResposta = new ErroResposta("Erro de validação: " + mensagem);
+
+        return handleExceptionInternal(ex, erroResposta, headers, status, request);
     }
 
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ErroResposta> handleGeral(Exception ex) {
-        return new ResponseEntity<>(new ErroResposta("Erro interno: " + ex.getMessage()), HttpStatus.INTERNAL_SERVER_ERROR);
+        ErroResposta erro = new ErroResposta("Erro interno do servidor: " + ex.getMessage());
+        return new ResponseEntity<>(erro, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 }
